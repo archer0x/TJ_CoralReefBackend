@@ -1,30 +1,28 @@
-package org.example.coralreef_backend.controller;
+package org.example.coralreef_backend.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.coralreef_backend.entity.CoralPhoto;
 import org.example.coralreef_backend.mapper.PhotoMapper;
+import org.example.coralreef_backend.service.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import static org.example.coralreef_backend.controller.UploadPhotoController.resource;
 
-@RestController
-public class TestController {
+@Service
+public class DataServiceImpl implements DataService {
     @Autowired
     private PhotoMapper photoMapper;
 
-    @GetMapping("/process_image")
-    public String test_py(@RequestBody String teststring) {
-        System.out.println("testing: "+teststring);
-        return teststring;
-    }
 
-    @PutMapping("/upload_photo")
-    public ResponseEntity<String> testUpload() {
+    @Override
+    public ResponseEntity<String> saveData() {
         try {
             // 获取当前时间并格式化为字符串
             LocalDateTime now = LocalDateTime.now();
@@ -45,13 +43,8 @@ public class TestController {
         }
     }
 
-
-//    {
-//        "id": 1,
-//            "name": "John",
-//            "data": "Some data",
-//            "status": "active",
-//            "time": "2025-02-14"
-//    }
-
+    @Override
+    public List<CoralPhoto> getData() {
+        return photoMapper.find();
+    }
 }

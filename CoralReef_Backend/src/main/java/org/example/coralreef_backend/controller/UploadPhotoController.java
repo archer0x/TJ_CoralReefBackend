@@ -1,5 +1,7 @@
 package org.example.coralreef_backend.controller;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,7 +17,7 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 @RestController
-public class UploadPhoto {
+public class UploadPhotoController {
     public static String resource;
 
     public static String request;
@@ -26,7 +28,6 @@ public class UploadPhoto {
     @Value("${IP}")
     private String IP; // 映射ip路径
 
-    @CrossOrigin(origins = "*")
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
@@ -51,19 +52,11 @@ public class UploadPhoto {
             return ResponseEntity.internalServerError().body("文件上传失败: " + e.getMessage());
         }
     }
-
+    @Getter
+    @Setter
     static class UploadResponse {
         private String imageUrl;
-
         public UploadResponse(String imageUrl) {
-            this.imageUrl = imageUrl;
-        }
-
-        public String getImageUrl() {
-            return imageUrl;
-        }
-
-        public void setImageUrl(String imageUrl) {
             this.imageUrl = imageUrl;
         }
     }
