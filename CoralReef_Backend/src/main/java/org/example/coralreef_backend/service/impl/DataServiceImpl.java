@@ -22,20 +22,20 @@ public class DataServiceImpl implements DataService {
 
 
     @Override
-    public ResponseEntity<String> saveData() {
+    public ResponseEntity<String> saveData(CoralPhoto photo) {
         try {
             // 获取当前时间并格式化为字符串
             LocalDateTime now = LocalDateTime.now();
             String formattedTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
             // 创建 CoralPhoto 对象
-            CoralPhoto coralPhoto = new CoralPhoto("test_photo", resource, "bleached", formattedTime);
+//            CoralPhoto coralPhoto = new CoralPhoto("test_photo", resource, "bleached", formattedTime);
 
             // 保存到数据库
-            photoMapper.save(coralPhoto);
+            photoMapper.save(photo);
 
             // 返回成功信息
-            return ResponseEntity.ok("上传成功！ID：" + coralPhoto.getId());
+            return ResponseEntity.ok("上传成功！ID：" + photo.getId());
         } catch (Exception e) {
             e.printStackTrace();
             // 返回失败信息
