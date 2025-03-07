@@ -12,7 +12,8 @@ import java.time.format.DateTimeFormatter;
 
 import static org.example.coralreef_backend.controller.UploadPhotoController.resource;
 
-@RestController
+@RestController()
+@RequestMapping("/api/test")
 public class TestController {
     @Autowired
     private PhotoMapper photoMapper;
@@ -44,14 +45,4 @@ public class TestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("上传失败：" + e.getMessage());
         }
     }
-
-
-//    {
-//        "id": 1,
-//            "name": "John",
-//            "data": "Some data",
-//            "status": "active",
-//            "time": "2025-02-14"
-//    }
-
 }

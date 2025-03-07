@@ -14,7 +14,8 @@ import java.util.List;
 import static org.example.coralreef_backend.controller.UploadPhotoController.resource;
 
 
-@RestController("/api/data")
+@RestController()
+@RequestMapping("/api/data")
 public class DataController {
     @Autowired
     private DataService dataService;  // 注入 DataService
