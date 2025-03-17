@@ -15,7 +15,6 @@ public class UserController {
 
     @Resource
     public UserService userService;
-
     /**
      * 创建一条数据
      * @param user 用户实体类参数

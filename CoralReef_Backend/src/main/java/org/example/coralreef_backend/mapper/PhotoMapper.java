@@ -12,6 +12,6 @@ public interface PhotoMapper {
     @Select("SELECT * FROM coralphoto")
     List<CoralPhoto> find();
 
-    @Insert("INSERT INTO coralphoto (name,data,status,time) VALUES (#{name},#{data},#{status},#{time})")
+    @Insert("INSERT INTO coralphoto (name,data,status,time,del_flag) VALUES (#{name},#{data},#{status},#{time},0)")
     void save(CoralPhoto coralphoto);
 }

@@ -27,13 +27,15 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("file:" + resultDir);
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        // 允许跨域请求的路径
-        registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173","https://*")  // 允许所有 HTTPS 前端地址
-                .allowedMethods("GET", "POST", "PUT", "DELETE")  // 允许的请求方式
-                .allowedHeaders("*")  // 允许的请求头
-                .allowCredentials(true);  // 是否允许携带凭证（如 Cookie）
-    }
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        // 允许跨域请求的路径
+//        registry.addMapping("/**")
+//                .allowedOrigins("http://localhost:5173","https://*")  // 允许所有 HTTPS 前端地址
+//                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 允许所有HTTP方法
+//                .allowedHeaders("*") // 允许所有头
+//                .exposedHeaders("Authorization") // 明确暴露Authorization头
+//                .allowCredentials(true) // 允许携带凭证
+//                .maxAge(3600); // 预检请求缓存时间
+//    }
 }

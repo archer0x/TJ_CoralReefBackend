@@ -2,10 +2,12 @@ package org.example.coralreef_backend.config;
 
 import jakarta.annotation.Resource;
 import org.example.coralreef_backend.common.DBUserDetailsManager;
+import org.example.coralreef_backend.common.JwtAuthenticationFilter;
 import org.example.coralreef_backend.security.handler.MyAuthenticationEntryPoint;
 import org.example.coralreef_backend.security.handler.MyAuthenticationFailureHandler;
 import org.example.coralreef_backend.security.handler.MyAuthenticationSuccessHandler;
 import org.example.coralreef_backend.security.handler.MyLogoutSuccessHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,14 +15,17 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,6 +37,9 @@ public class SecurityConfig {
 
     @Resource
     private DBUserDetailsManager userDetailsManager;
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -62,16 +70,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .formLogin(form -> form
-                        .loginProcessingUrl("/myLogin")
-                        .successHandler(new MyAuthenticationSuccessHandler()) //登录成功后处理
-                        .failureHandler(new MyAuthenticationFailureHandler()) //登录失败后处理
-                        .permitAll()
-                )
+//                .formLogin(form -> form
+//                        .loginProcessingUrl("/myLogin")
+//                        .successHandler(new MyAuthenticationSuccessHandler()) //登录成功后处理
+//                        .failureHandler(new MyAuthenticationFailureHandler()) //登录失败后处理
+//                        .permitAll()
+//                )
+//                .addFilterBefore(corsFilter(), UsernamePasswordAuthenticationFilter.class)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 启用 CORS 配置
                 .csrf(AbstractHttpConfigurer::disable) // 关闭 CSRF 保护
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/myLogin", "/logout").permitAll() // 允许未认证的访问
+                        .requestMatchers("/myLogin", "/logout","/users/createOne","/UploadPhoto/**").permitAll() // 允许未认证的访问
                         .anyRequest().authenticated() // 其他请求需要认证
                 )
                 .exceptionHandling(exception -> exception
@@ -82,7 +91,16 @@ public class SecurityConfig {
                         .logoutSuccessHandler(new MyLogoutSuccessHandler()) // 注销成功后的处理
                         .permitAll()
                 )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 设置无状态 Session
+                )
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         ;
+//        http.sessionManagement(session -> session
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 设置无状态 Session
+//        );
+//        // 在 UsernamePasswordAuthenticationFilter 之前添加 JWT 过滤器
+//        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
 
     }
@@ -94,14 +112,25 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // *表示允许任何来源的请求访问，一般改成项目所属的前端域名或ip端口号
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // 1. 显式指定允许的源（避免使用 *）
+        configuration.addAllowedOrigin("http://localhost:5173");
+
+        // 2. 允许的 HTTP 方法（覆盖默认值）
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+
+        // 3. 允许的请求头（生产环境应明确列出）
+        configuration.addAllowedHeader("*");
+
+        // 4. 启用凭证支持（需与 allowedOrigin 配合）
+        configuration.setAllowCredentials(true);
+
+        // 5. 暴露自定义响应头（如 Authorization）
+        configuration.addExposedHeader("Authorization");
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-
 }
 
