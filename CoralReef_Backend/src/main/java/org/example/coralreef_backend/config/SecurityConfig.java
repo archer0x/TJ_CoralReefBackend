@@ -80,7 +80,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 启用 CORS 配置
                 .csrf(AbstractHttpConfigurer::disable) // 关闭 CSRF 保护
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/myLogin", "/logout","/users/createOne","/UploadPhoto/**").permitAll() // 允许未认证的访问
+                        .requestMatchers("/myLogin", "/logout","/users/createOne","/UploadPhoto/**","/upload").permitAll() // 允许未认证的访问
                         .anyRequest().authenticated() // 其他请求需要认证
                 )
                 .exceptionHandling(exception -> exception

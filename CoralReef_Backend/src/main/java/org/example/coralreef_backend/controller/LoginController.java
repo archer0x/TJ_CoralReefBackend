@@ -19,6 +19,7 @@ import java.util.Map;
 @RequestMapping("")
 @ResponseStatus(HttpStatus.OK) // 成功时默认200，不需要显式设置
 public class LoginController {
+    public static String loginname;
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -39,6 +40,8 @@ public class LoginController {
             userInfo.put("username", username);
 //            userInfo.put("password", password);
             userInfo.put("jwt", token);
+
+            loginname=username;
 
             return Result.success(userInfo);
 

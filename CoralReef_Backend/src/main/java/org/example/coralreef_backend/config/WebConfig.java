@@ -3,6 +3,7 @@ package org.example.coralreef_backend.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -27,15 +28,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("file:" + resultDir);
     }
 
-//    @Override
-//    public void addCorsMappings(CorsRegistry registry) {
-//        // 允许跨域请求的路径
-//        registry.addMapping("/**")
-//                .allowedOrigins("http://localhost:5173","https://*")  // 允许所有 HTTPS 前端地址
-//                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 允许所有HTTP方法
-//                .allowedHeaders("*") // 允许所有头
-//                .exposedHeaders("Authorization") // 明确暴露Authorization头
-//                .allowCredentials(true) // 允许携带凭证
-//                .maxAge(3600); // 预检请求缓存时间
-//    }
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 }
