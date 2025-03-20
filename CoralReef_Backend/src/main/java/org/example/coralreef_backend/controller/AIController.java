@@ -25,4 +25,11 @@ public class AIController {
         System.out.println(result);
         return Result.success(result);
     }
+
+    @PostMapping("/multiple")
+    public Result<Object> getYoloPhotos() {
+        String result=aiService.YoloSingle();
+        System.out.println(result);
+        return Result.success(result);
+    }
 }

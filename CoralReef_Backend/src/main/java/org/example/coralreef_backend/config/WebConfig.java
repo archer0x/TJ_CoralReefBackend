@@ -13,6 +13,9 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${upload.dir}")
     private String uploadDir; // 上传文件存储的目录
 
+    @Value("${resultTemp.dir}")
+    private String resultTempDir; // 上传文件存储的目录
+
     @Value("${result.dir}")
     private String resultDir; // 上传文件存储的目录
 
@@ -22,6 +25,10 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/UploadPhoto/**")
                 // 访问http://localhost:8080/photo/1.jpg 会自动找C:\Users\Lenovo\Desktop\resource\ 路径下名为1.jpg图片
                 .addResourceLocations("file:" + uploadDir);
+
+        registry.addResourceHandler("/ResultTempPhoto/**")
+                // 访问http://localhost:8080/photo/1.jpg 会自动找C:\Users\Lenovo\Desktop\resource\ 路径下名为1.jpg图片
+                .addResourceLocations("file:" + resultTempDir);
 
         registry.addResourceHandler("/ResultPhoto/**")
                 // 访问http://localhost:8080/photo/1.jpg 会自动找C:\Users\Lenovo\Desktop\resource\ 路径下名为1.jpg图片

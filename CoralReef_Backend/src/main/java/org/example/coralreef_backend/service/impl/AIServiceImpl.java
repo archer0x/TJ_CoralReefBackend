@@ -15,6 +15,7 @@ import static org.example.coralreef_backend.controller.UploadPhotoController.req
 
 @Service
 public class AIServiceImpl implements AIService {
+    public static YoloResponse yoloResponse;
     @Autowired
     private RestTemplate restTemplate;
 
@@ -23,12 +24,12 @@ public class AIServiceImpl implements AIService {
         // YOLO 服务的地址
         String yoloUrl = "http://localhost:8081/predict";
 
-        // 设置请求体内容，可以在这里传入图片路径
+        // 设置请求体内容，传入图片路径
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        // 假设我们需要传递的参数是 image_path
-        String imagePath = request;  // 你可以根据实际需求获取路径
+        // 需要传递的参数是 image_path
+        String imagePath = request;
         String jsonBody = "{\"image_path\": \"" + imagePath + "\"}";
 
         HttpEntity<String> requestEntity = new HttpEntity<>(jsonBody, headers);
@@ -42,12 +43,12 @@ public class AIServiceImpl implements AIService {
         );
 
         // 获取 YOLO 返回的数据
-        YoloResponse yoloResponse = responseEntity.getBody();
+        yoloResponse = responseEntity.getBody();
 
-        // 处理 YOLO 返回的数据（这里可以根据你的需求来处理）
+        // 处理 YOLO 返回的数据
         if (yoloResponse != null && yoloResponse.getRes() != null) {
             // 返回成功
-            return yoloResponse.getRes().toString();
+            return yoloResponse.getRes().getPredict_folder();
         } else {
             // 发生错误，返回失败
             return "错误";

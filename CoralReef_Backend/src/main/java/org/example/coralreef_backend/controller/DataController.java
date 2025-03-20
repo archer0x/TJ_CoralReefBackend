@@ -36,8 +36,8 @@ public class DataController {
     }
 
     @PostMapping("/save_photo")
-    public ResponseEntity<String> savePhoto(@RequestBody CoralPhoto photo) {
-        ResponseEntity<String> stringResponseEntity=dataService.saveData(photo);
+    public ResponseEntity<String> savePhoto() {
+        ResponseEntity<String> stringResponseEntity=dataService.saveData();
         System.out.println(stringResponseEntity.getBody());
         return ResponseEntity.ok(stringResponseEntity.getBody());
     }

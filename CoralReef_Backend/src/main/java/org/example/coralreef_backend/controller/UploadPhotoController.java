@@ -20,6 +20,7 @@ import static org.example.coralreef_backend.controller.LoginController.loginname
 
 @RestController
 public class UploadPhotoController {
+
     public static String resource;
 
     public static String request;
@@ -55,7 +56,7 @@ public class UploadPhotoController {
             Files.copy(file.getInputStream(), filePath);
 
             // 返回文件的访问路径
-            String fileUrl = "/uploads/" + loginname + "/" + fileName;
+//            String fileUrl = "/uploads/" + loginname + "/" + fileName;
             resource = IP + "UploadPhoto/" + loginname + "/" + fileName;
             request = userFolderPath + "/" + fileName; // Windows路径格式
             request=request.replace("\\", "/");
@@ -65,7 +66,7 @@ public class UploadPhotoController {
             System.out.println(resource);
 
             // 返回文件的 URL
-            return ResponseEntity.ok().body(new UploadResponse(fileUrl));
+            return ResponseEntity.ok().body(new UploadResponse(resource));
 
         } catch (IOException e) {
             e.printStackTrace();

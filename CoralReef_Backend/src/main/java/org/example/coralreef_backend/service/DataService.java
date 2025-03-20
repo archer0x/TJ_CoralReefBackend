@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface DataService{
 
-    ResponseEntity<String> saveData(CoralPhoto photo);
+    ResponseEntity<String> saveData();
 
     List<CoralPhoto> getData();
+
+    public void copyFileToFolder(String sourcePath, String targetDir);
 }
