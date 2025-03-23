@@ -13,7 +13,6 @@ import java.util.List;
 
 import static org.example.coralreef_backend.controller.UploadPhotoController.resource;
 
-
 @RestController()
 @RequestMapping("/api/data")
 public class DataController {

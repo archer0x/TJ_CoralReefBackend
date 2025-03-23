@@ -39,13 +39,22 @@ public class UploadPhotoController {
         }
 
         try {
-            String loginname="test"; //测试环境
+//            String loginname="test"; //测试环境
             // 创建以 loginname 为文件夹名的目录
             Path userFolderPath = Paths.get(uploadDir, loginname);
             if (!Files.exists(userFolderPath)) {
                 Files.createDirectories(userFolderPath); // 创建文件夹
             }
-
+//            else{
+//                Files.list(userFolderPath)  // 列出文件夹中的所有文件
+//                        .forEach(filePath -> {
+//                            try {
+//                                Files.delete(filePath); // 删除每个文件
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        });
+//            }
             // 生成唯一的文件名
             String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 

@@ -17,20 +17,21 @@ public interface UserService extends IService<User> {
      * 创建单条数据
      */
     int createOne(User user);
+
     /**
      * 创建单条数据
      */
     int updateOne(User user);
+
     /**
      * 删除单条数据
      */
-    int deleteOne(Long id);
+    int deleteOne(String username);
 
     /**
      * 批量删除
      */
     int deleteBatch(List<Long> idList);
-
 
     /**
      * 查询多条数据
@@ -40,6 +41,6 @@ public interface UserService extends IService<User> {
     /**
      * 单条查询
      */
-    User findOne(Long id);
+    User findOne(String username);
 
 }

@@ -22,8 +22,18 @@ public class UserController {
      */
     @PostMapping("/createOne")
     public Result<?> createOne(@RequestBody User user){
-        return Result.success(userService.createOne(user));
+        try {
+            int result = userService.createOne(user);
+            return Result.success(result);
+        } catch (RuntimeException e) {
+            // 判断错误类型，返回不同的错误代码
+            if (e.getMessage().contains("插入用户失败")) {
+                return Result.failure(400, "用户插入失败，请检查数据");
+            }
+            return Result.failure(500, "服务器内部错误，请稍后再试");
+        }
     }
+
 
     /**
      * 修改一条数据
@@ -37,17 +47,17 @@ public class UserController {
 
     /**
      * 删除一条数据
-     * @param id 主键id
+     * @param username 主键id
      * @return 统一接口返回结果类
      */
-    @PostMapping("/deleteOne/{id}")
-    public Result<?> deleteOne(@PathVariable Long id){
-        return Result.success(userService.deleteOne(id));
+    @PostMapping("/deleteOne/{username}")
+    public Result<?> deleteOne(@PathVariable String username){
+        return Result.success(userService.deleteOne(username));
     }
 
     /**
      * 批量删除
-     * @param idList 主键id集合
+     * @param idList id集合
      * @return 统一接口返回结果类
      */
     @PostMapping("/deleteBatch")
@@ -67,12 +77,12 @@ public class UserController {
 
     /**
      * 查询一条数据
-     * @param id 主键id
+     * @param username 主键id
      * @return 统一接口返回结果类
      */
-    @GetMapping("/findOne/{id}")
-    public Result<?> findOne(@PathVariable Long id){
-        return Result.success(userService.findOne(id));
+    @GetMapping("/findOne/{username}")
+    public Result<?> findOne(@PathVariable String username){
+        return Result.success(userService.findOne(username));
     }
 
 }

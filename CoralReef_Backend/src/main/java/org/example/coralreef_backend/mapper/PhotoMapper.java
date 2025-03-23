@@ -9,9 +9,9 @@ import java.util.List;
 
 @Mapper
 public interface PhotoMapper {
-    @Select("SELECT * FROM coralphoto")
-    List<CoralPhoto> find();
+    @Select("SELECT * FROM coralphoto WHERE username=#{username}")
+    List<CoralPhoto> find(String username);
 
-    @Insert("INSERT INTO coralphoto (name,data,status,time,del_flag) VALUES (#{name},#{data},#{status},#{time},0)")
+    @Insert("INSERT INTO coralphoto (name,data,status,time,del_flag,username) VALUES (#{name},#{data},#{status},#{time},0,#{username})")
     void save(CoralPhoto coralphoto);
 }

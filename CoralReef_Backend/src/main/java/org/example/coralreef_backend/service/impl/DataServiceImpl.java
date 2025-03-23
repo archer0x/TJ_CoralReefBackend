@@ -6,6 +6,7 @@ import org.example.coralreef_backend.entity.YoloResponse;
 import org.example.coralreef_backend.mapper.PhotoMapper;
 import org.example.coralreef_backend.service.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static org.example.coralreef_backend.controller.LoginController.loginname;
 import static org.example.coralreef_backend.controller.UploadPhotoController.resource;
 import static org.example.coralreef_backend.service.impl.AIServiceImpl.yoloResponse;
 
@@ -28,23 +30,26 @@ public class DataServiceImpl implements DataService {
     @Autowired
     private PhotoMapper photoMapper;
 
+    @Value("${result.dir}")
+    private String resultDir; // 上传文件存储的目录
+
     @Override
     public ResponseEntity<String> saveData() {
         try {
             // 目标总存储文件夹
             String targetFolder = "D:/Code/backend/ResultPhoto";
 
-            String loginname="test"; //测试环境
+//            String loginname="test"; //测试环境
             // 创建以 loginname 为文件夹名的目录
             Path userFolderPath = Paths.get(targetFolder, loginname);
             if (!Files.exists(userFolderPath)) {
                 Files.createDirectories(userFolderPath); // 创建文件夹
             }
-            String targetFolderUser = "D:/Code/backend/ResultPhoto"+"/"+loginname;
+            String targetFolderUser = resultDir+loginname;
 
             // 获取当前时间并格式化为字符串
             LocalDateTime now = LocalDateTime.now();
-            String formattedTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String formattedTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
 
             // 处理 YOLO 返回的数据
             if (yoloResponse != null && yoloResponse.getRes() != null) {
@@ -56,6 +61,7 @@ public class DataServiceImpl implements DataService {
                     coralPhoto.setData(result.getSave_path());
                     coralPhoto.setStatus(result.getStatus());
                     coralPhoto.setTime(formattedTime);
+                    coralPhoto.setUsername(loginname);
                     photoMapper.save(coralPhoto);
                 }
 
@@ -63,12 +69,7 @@ public class DataServiceImpl implements DataService {
                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("返回数据为空");
             }
 
-            // 创建 CoralPhoto 对象
-//            CoralPhoto coralPhoto = new CoralPhoto("test_photo", resource, "bleached", formattedTime);
-
-            // 保存到数据库
-//            photoMapper.save(photo);
-
+            deleteFile(resultDir);
             // 返回成功信息
             return ResponseEntity.ok("上传成功！");
         } catch (Exception e) {
@@ -80,9 +81,8 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public List<CoralPhoto> getData() {
-        return photoMapper.find();
+        return photoMapper.find(loginname);
     }
-
 
     /**
      * 复制文件到目标文件夹
@@ -99,5 +99,18 @@ public class DataServiceImpl implements DataService {
             System.err.println("文件复制失败: " + sourceFile.getPath());
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void deleteFile(String filepath) throws IOException {
+        Path userFolderPath = Paths.get(filepath, loginname);
+        Files.list(userFolderPath)  // 列出文件夹中的所有文件
+                .forEach(filePath -> {
+                    try {
+                        Files.delete(filePath); // 删除每个文件
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 }

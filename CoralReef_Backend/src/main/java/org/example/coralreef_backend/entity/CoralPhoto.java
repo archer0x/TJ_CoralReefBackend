@@ -17,11 +17,13 @@ public class CoralPhoto {
     private String data;
     private String status;
     private String time;
+    private String username;
 
-    public CoralPhoto(String name, String data, String status, String time) {
+    public CoralPhoto(String name, String data, String status, String time, String username) {
         this.name = name;
         this.data = data;
         this.status = status;
         this.time = time;
+        this.username = username;
     }
 }

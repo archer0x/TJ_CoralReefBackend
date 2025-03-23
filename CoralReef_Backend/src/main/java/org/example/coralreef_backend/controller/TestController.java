@@ -24,25 +24,25 @@ public class TestController {
         return teststring;
     }
 
-    @PutMapping("/upload_photo")
-    public ResponseEntity<String> testUpload() {
-        try {
-            // 获取当前时间并格式化为字符串
-            LocalDateTime now = LocalDateTime.now();
-            String formattedTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-            // 创建 CoralPhoto 对象
-            CoralPhoto coralPhoto = new CoralPhoto("test_photo", resource, "bleached", formattedTime);
-
-            // 保存到数据库
-            photoMapper.save(coralPhoto);
-
-            // 返回成功信息
-            return ResponseEntity.ok("上传成功！ID：" + coralPhoto.getId());
-        } catch (Exception e) {
-            e.printStackTrace();
-            // 返回失败信息
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("上传失败：" + e.getMessage());
-        }
-    }
+//    @PutMapping("/upload_photo")
+//    public ResponseEntity<String> testUpload() {
+//        try {
+//            // 获取当前时间并格式化为字符串
+//            LocalDateTime now = LocalDateTime.now();
+//            String formattedTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+//
+//            // 创建 CoralPhoto 对象
+//            CoralPhoto coralPhoto = new CoralPhoto("test_photo", resource, "bleached", formattedTime,);
+//
+//            // 保存到数据库
+//            photoMapper.save(coralPhoto);
+//
+//            // 返回成功信息
+//            return ResponseEntity.ok("上传成功！ID：" + coralPhoto.getId());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            // 返回失败信息
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("上传失败：" + e.getMessage());
+//        }
+//    }
 }
