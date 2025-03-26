@@ -12,6 +12,10 @@ public interface DataService{
 
     List<CoralPhoto> getData();
 
+    List<CoralPhoto> getAllData();
+
+    int deleteData(String photoname);
+
     void copyFileToFolder(String sourcePath, String targetDir);
 
     void deleteFile(String filepath) throws IOException;

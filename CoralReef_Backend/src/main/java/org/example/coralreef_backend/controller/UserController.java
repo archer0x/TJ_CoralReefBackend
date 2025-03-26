@@ -1,8 +1,10 @@
 package org.example.coralreef_backend.controller;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
 import org.example.coralreef_backend.common.Result;
 import org.example.coralreef_backend.dto.UserRequestDto;
+import org.example.coralreef_backend.entity.Email;
 import org.example.coralreef_backend.entity.User;
 import org.example.coralreef_backend.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -17,23 +19,25 @@ public class UserController {
     public UserService userService;
     /**
      * 创建一条数据
-     * @param user 用户实体类参数
+     * @param email 用户实体类参数
      * @return 统一接口返回结果类
      */
     @PostMapping("/createOne")
-    public Result<?> createOne(@RequestBody User user){
+    public Result<?> createOne(@RequestBody Email email, HttpSession session){
         try {
-            int result = userService.createOne(user);
+            int result = userService.createOne(email,session);
             return Result.success(result);
         } catch (RuntimeException e) {
             // 判断错误类型，返回不同的错误代码
             if (e.getMessage().contains("插入用户失败")) {
                 return Result.failure(400, "用户插入失败，请检查数据");
             }
-            return Result.failure(500, "服务器内部错误，请稍后再试");
+            else if(e.getMessage().contains("验证码错误")){
+                return Result.failure(400, "验证码错误");
+            }
+            return Result.failure(500, e.getMessage());
         }
     }
-
 
     /**
      * 修改一条数据
@@ -50,7 +54,7 @@ public class UserController {
      * @param username 主键id
      * @return 统一接口返回结果类
      */
-    @PostMapping("/deleteOne/{username}")
+    @DeleteMapping("/deleteOne/{username}")
     public Result<?> deleteOne(@PathVariable String username){
         return Result.success(userService.deleteOne(username));
     }
@@ -60,7 +64,7 @@ public class UserController {
      * @param idList id集合
      * @return 统一接口返回结果类
      */
-    @PostMapping("/deleteBatch")
+    @DeleteMapping("/deleteBatch")
     public Result<?> deleteBatch(@RequestBody List<Long> idList){
         return Result.success(userService.deleteBatch(idList));
     }

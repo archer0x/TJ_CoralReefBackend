@@ -6,10 +6,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
 import org.example.coralreef_backend.dto.UserRequestDto;
+import org.example.coralreef_backend.entity.Email;
 import org.example.coralreef_backend.entity.User;
+import org.example.coralreef_backend.security.servcie.EmailService;
 import org.example.coralreef_backend.service.UserService;
 import org.example.coralreef_backend.mapper.UserMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -28,6 +32,9 @@ import java.util.List;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         implements UserService{
 
+    @Autowired
+    private EmailService emailService;
+
     @Resource
     public UserMapper userMapper;
 
@@ -36,17 +43,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     /**
      * 创建单条数据
-     * @param user 用户实体类参数
+     * @param email 用户实体类参数
      * @return int
      */
     @Override
-    public int createOne(User user) {
-        Assert.notNull(user, "用户实体类参数不能为空");
-        Assert.hasText(user.getPassword(), "密码不能为空");
+    public int createOne(Email email, HttpSession session) {
+        User user = new User();
+        Assert.notNull(email, "用户实体类参数不能为空");
+        Assert.hasText(email.getPassword(), "密码不能为空");
 
+        if(!emailService.registered(email,session)){
+            throw new RuntimeException("验证码错误");
+        }
         user.setEnabled(1);
+        user.setPhone(email.getPhone());
+        user.setUsername(email.getUsername());
+        user.setEmail(email.getEmail());
         //密码加密
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(email.getPassword()));
 
         user.setCreateTime(new Date());
         user.setUpdateTime(new Date());
@@ -73,7 +87,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         Assert.notNull(user, "用户实体类参数不能为空");
         Assert.notNull(user.getId(), "用户主键ID不能为空");
-        if(user.getPassword() != null){
+        if(user.getPassword() != null && !user.getPassword().startsWith("{bcrypt}")){
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         return userMapper.updateById(user);
@@ -155,7 +169,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return userMapper.selectOne(queryWrapper);
 
     }
-
 }
 
 

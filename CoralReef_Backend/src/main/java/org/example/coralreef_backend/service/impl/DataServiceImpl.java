@@ -1,7 +1,9 @@
 package org.example.coralreef_backend.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.coralreef_backend.entity.CoralPhoto;
+import org.example.coralreef_backend.entity.User;
 import org.example.coralreef_backend.entity.YoloResponse;
 import org.example.coralreef_backend.mapper.PhotoMapper;
 import org.example.coralreef_backend.service.DataService;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.io.File;
 import java.io.IOException;
@@ -84,6 +87,16 @@ public class DataServiceImpl implements DataService {
         return photoMapper.find(loginname);
     }
 
+    @Override
+    public List<CoralPhoto> getAllData(){
+        return photoMapper.findAll();
+    }
+
+    @Override
+    public int deleteData(String photoname){
+        Assert.notNull(photoname, "photoname不能为空");
+        return photoMapper.deleteData(photoname);
+    }
     /**
      * 复制文件到目标文件夹
      */

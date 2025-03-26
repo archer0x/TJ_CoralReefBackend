@@ -1,7 +1,9 @@
 package org.example.coralreef_backend.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import jakarta.servlet.http.HttpSession;
 import org.example.coralreef_backend.dto.UserRequestDto;
+import org.example.coralreef_backend.entity.Email;
 import org.example.coralreef_backend.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -16,7 +18,7 @@ public interface UserService extends IService<User> {
     /**
      * 创建单条数据
      */
-    int createOne(User user);
+    int createOne(Email email, HttpSession session);
 
     /**
      * 创建单条数据
@@ -42,5 +44,4 @@ public interface UserService extends IService<User> {
      * 单条查询
      */
     User findOne(String username);
-
 }

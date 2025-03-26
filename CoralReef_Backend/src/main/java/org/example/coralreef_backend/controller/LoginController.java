@@ -4,6 +4,8 @@ import com.alibaba.fastjson2.JSON;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.coralreef_backend.common.JwtUtil;
 import org.example.coralreef_backend.common.Result;
+import org.example.coralreef_backend.entity.User;
+import org.example.coralreef_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,6 +28,9 @@ public class LoginController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping("/myLogin")
     public Result<Object> myLogin(@RequestParam String username,
                                   @RequestParam String password) {
@@ -35,6 +40,10 @@ public class LoginController {
 
             String token = jwtUtil.generateToken(username);
 
+            User user=userService.findOne(username);
+            if(user.getEnabled()==0){
+                return Result.success("账号已被弃用");
+            }
             System.out.println("登录成功："+token);
             Map<String, Object> userInfo = new HashMap<>();
             userInfo.put("username", username);

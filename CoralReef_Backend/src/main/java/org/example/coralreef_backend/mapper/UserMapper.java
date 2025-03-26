@@ -10,7 +10,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity org.example.coralreef_backend.entity.User
 */
 public interface UserMapper extends BaseMapper<User> {
-
 }
 
 

@@ -19,11 +19,25 @@ public class DataController {
     @Autowired
     private DataService dataService;  // 注入 DataService
 
-    // GET 请求，获取所有照片数据
+    // GET 请求，获取某用户照片数据
     @GetMapping("/get_photo")
-    public ResponseEntity<List<CoralPhoto>> getAllPhotos() {
+    public ResponseEntity<List<CoralPhoto>> getPhotos() {
         // 调用服务层获取数据
         List<CoralPhoto> photos = dataService.getData();
+
+        // 返回查询到的照片数据，Spring Boot 会自动将 List<CoralPhoto> 转为 JSON 格式
+        if (photos.isEmpty()) {
+            return ResponseEntity.status(404).body(null);  // 如果没有数据，返回 404
+        }
+
+        System.out.println(ResponseEntity.ok(photos).getBody());
+        return ResponseEntity.ok(photos);  // 返回 200 OK 和照片数据
+    }
+
+    @GetMapping("/getAllPhoto")
+    public ResponseEntity<List<CoralPhoto>> getAllPhotos() {
+        // 调用服务层获取数据
+        List<CoralPhoto> photos = dataService.getAllData();
 
         // 返回查询到的照片数据，Spring Boot 会自动将 List<CoralPhoto> 转为 JSON 格式
         if (photos.isEmpty()) {
@@ -39,5 +53,11 @@ public class DataController {
         ResponseEntity<String> stringResponseEntity=dataService.saveData();
         System.out.println(stringResponseEntity.getBody());
         return ResponseEntity.ok(stringResponseEntity.getBody());
+    }
+
+    @DeleteMapping("/delete_photo")
+    public ResponseEntity<String> deletePhoto(@RequestParam String photoname) {
+        int result =dataService.deleteData(photoname);
+        return ResponseEntity.ok(String.valueOf(result));
     }
 }
