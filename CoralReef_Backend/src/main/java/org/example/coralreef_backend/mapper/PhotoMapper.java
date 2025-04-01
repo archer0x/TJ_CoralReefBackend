@@ -19,6 +19,6 @@ public interface PhotoMapper {
     @Update("UPDATE coralphoto SET del_flag=1 WHERE name=#{photoname}")
     int deleteData(String photoname);
 
-    @Insert("INSERT INTO coralphoto (name,data,status,time,del_flag,username) VALUES (#{name},#{data},#{status},#{time},0,#{username})")
+    @Insert("INSERT INTO coralphoto (name,data,status,time,del_flag,username,confidence) VALUES (#{name},#{data},#{status},#{time},0,#{username},#{confidence})")
     void save(CoralPhoto coralphoto);
 }

@@ -18,12 +18,14 @@ public class CoralPhoto {
     private String status;
     private String time;
     private String username;
+    private double Confidence;
 
-    public CoralPhoto(String name, String data, String status, String time, String username) {
+    public CoralPhoto(String name, String data, String status, String time, String username,double Confidence) {
         this.name = name;
         this.data = data;
         this.status = status;
         this.time = time;
         this.username = username;
+        this.Confidence = Confidence;
     }
 }

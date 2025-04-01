@@ -63,6 +63,7 @@ public class DataServiceImpl implements DataService {
                     coralPhoto.setName(result.getImage_name());
                     coralPhoto.setData(result.getSave_path());
                     coralPhoto.setStatus(result.getStatus());
+                    coralPhoto.setConfidence(result.getDetections().get(0).getConfidence());
                     coralPhoto.setTime(formattedTime);
                     coralPhoto.setUsername(loginname);
                     photoMapper.save(coralPhoto);
